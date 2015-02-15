@@ -1,0 +1,28 @@
+<h1> BRAND </h1>
+<?php $_helper = $this->helper('catalog/output');?>
+<?php
+/* @var $this Busteco_Collections_Block_Brand */
+foreach ($this->getAllBrands() as $brand) :?>
+    
+    <?php $brandValue = $brand['value'];
+    $collection = $this->getCollectionByBrand($brandValue);?>
+    <?php if ($collection->count()):?>
+        <ul>
+            <?php echo $brand['label'];?>
+            <?php 
+            foreach ($collection as $product):?>
+               <?php  /* @var $product Mage_Catalog_Model_Product */ ?>
+            <li class="item"> 
+                <div class="product-shop">
+                    <div class="f-fix">
+                        <div class="product-primary">
+                            <?php $_productNameStripped = $this->stripTags($product->getName(), null, true); ?>
+                            <h2 class="product-name"><?php //echo $product->getName();?><a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($product, $product->getName() , 'name'); ?></a></h2>
+                        </div>
+                    </div>
+                </div>
+            </li> <br/>
+            <?php endforeach;?>
+        </ul>
+    <?php endif ?>
+<?php endforeach;?>

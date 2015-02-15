@@ -1,0 +1,63 @@
+<h1> PROMOTIE </h1>
+<?php $_helper = $this->helper('catalog/output');?>
+<div class="category-products">
+    <ol class="products-list" id="products-list">
+        <?php 
+        foreach ($this->getCollection() as $_product) :
+            /* @var $product Mage_Catalog_Model_Product */?>
+            <li class="item">
+            <?php // Product description ?>
+            <div class="product-shop">
+                <div class="f-fix">
+                    <div class="product-primary">
+                        <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+                        <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>
+                        <?php if($_product->getRatingSummary()): ?>
+                        <?php echo $this->getReviewsSummaryHtml($_product) ?>
+                        <?php endif; ?>
+                        <?php
+                        // Provides extra blocks on which to hang some features for products in the list
+                        // Features providing UI elements targeting this block will display directly below the product name
+                        if ($this->getChild('name.after')) {
+                            $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+                            foreach ($_nameAfterChildren as $_nameAfterChildName) {
+                                $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+                                $_nameAfterChild->setProduct($_product);
+                                echo $_nameAfterChild->toHtml();
+                            }
+                        }
+                        ?>
+                    </div>
+                    <div class="product-secondary">
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+                    </div>
+                    <div class="product-secondary">
+                        <?php if(!$_product->canConfigure() && $_product->isSaleable()): ?>
+                            <p class="action"><button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></p>
+                        <?php elseif($_product->getStockItem() && $_product->getStockItem()->getIsInStock()): ?>
+                            <p class="action"><a title="<?php echo $this->__('View Details') ?>" class="button" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a></p>
+                        <?php else: ?>
+                            <p class="action availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                        <?php endif; ?>
+                        <ul class="add-to-links">
+                            <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                            <?php endif; ?>
+                            <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                                <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                    <div class="desc std">
+                        <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <?php endforeach ?>
+    </ol>
+</div>
+<?php /* @var $this Busteco_Collections_Block_Promotie */?>
+
+
